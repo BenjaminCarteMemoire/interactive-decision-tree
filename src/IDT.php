@@ -30,6 +30,7 @@ class IDT {
 
         $tags_list = [
             Tags\Image::class,
+            Tags\Bold::class,
         ];
 
         return $tags_list;

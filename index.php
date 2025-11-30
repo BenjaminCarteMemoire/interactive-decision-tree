@@ -1,3 +1,7 @@
+<head>
+    <title>Test IDT</title>
+    <link rel="stylesheet" href="css/IDT.css" type="text/css">
+</head>
 <?php
 
 include_once "vendor/autoload.php";
@@ -9,7 +13,6 @@ echo '<pre>';
 echo $a->export_as_json();
 echo '</pre>';
 ?>
-
 <div id="idt_container"></div>
 <script id="json_tree">
     const IDT_TREE = <?php echo $a->export_as_json(); ?>;

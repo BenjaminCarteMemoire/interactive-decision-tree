@@ -1,0 +1,24 @@
+/*
+-----
+DEFAULT VARS
+-----
+*/
+
+:root {
+
+    --IDT-bold: 700;
+    --IDT-color: #000;
+}
+
+/*
+-----
+IDT TAGS
+-----
+*/
+
+.IDT_tag_bold { font-weight: var( --IDT-bold ); }
+.IDT_tag_italic { font-style: italic; }
+.IDT_tag_underline { text-decoration: underline; }
+
+.IDT_tag_color { color: var( --IDT-color ); }
+
