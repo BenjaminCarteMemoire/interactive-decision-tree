@@ -1,0 +1,140 @@
+<?php
+
+namespace InteractiveDecisionTree;
+
+class IDT {
+
+    public string $filename;
+    public private(set) array $tree = [];
+
+    public function __construct( string $filename )
+    {
+        $this->filename = $filename;
+        return $this;
+    }
+
+    public function get_all_types() {
+
+        $type_list = [
+            Types\Question::class,
+            Types\Leaf::class,
+            Types\Action::class,
+            Types\Answer::class
+        ];
+
+        return $type_list;
+
+    }
+
+    public function get_all_tags() {
+
+        $tags_list = [
+            Tags\Image::class,
+        ];
+
+        return $tags_list;
+
+    }
+
+    public function read_file(): array {
+
+        $content = file($this->filename, FILE_IGNORE_NEW_LINES);
+        return $content;
+
+    }
+
+    public static function parse_args( string $s ): array {
+
+        $args = [];
+        preg_match_all('/(\w+)\s*:\s*"([^"]*)"/', $s, $m, PREG_SET_ORDER);
+        foreach ($m as $match) {
+            $args[$match[1]] = $match[2];
+        }
+        return $args;
+
+    }
+
+    public function parse_tags( string $line ){
+
+        return preg_replace_callback( '/\{(.*?)\}/', function($m) {
+
+            $inside = trim( $m[1] );
+
+            if( !preg_match('/^([A-Za-z0-9_]+)\s*,\s*(.*)$/', $inside, $m2) )
+                return ""; // Error, no key.
+
+            $tag_name = $m2[1];
+            $global_args = trim( $m2[2] );
+
+            preg_match_all('/"([^"]+)"/', $global_args, $m3);
+            $mandatory_params = $m3[1];
+            $args = self::parse_args( $global_args );
+
+            foreach( $this->get_all_tags() as $tag_class ) {
+                $tag_instance = new $tag_class();
+                $pre_response = $tag_instance->replace( $tag_name, $mandatory_params, $args );
+                if( !is_null( $pre_response ) )
+                    return $pre_response;
+            }
+
+            return "";
+
+        }, $line );
+    }
+
+    public function parse(){
+
+        $content = $this->read_file();
+        $current_key = null;
+        $type = null;
+        $break = false;
+
+        foreach ($content as $line){
+
+            $line = trim($line);
+
+            // Ignore comments or blank line at first.
+            if( $line === '' || $line[0] === '#' )
+                continue;
+
+            foreach( $this->get_all_types() as $type_class ){
+
+                $type_instance = new $type_class();
+                if( $type_instance->find_pattern( $this->tree, $line, $type, $current_key ) ){ // If type is the right one. Stop the loop and go to the next line.
+                    $break = true;
+                    break;
+                }
+
+            }
+
+            if( $break ){ // Go to the next line.
+                $break = false;
+                continue;
+            }
+
+            // EOBlock
+            if( $line === '-' ){
+                $current_key = null;
+                $type = null;
+                continue;
+            }
+
+            if( $current_key !== null ) { // If it's no type and in a block, it's a text element.
+
+                $tagged_line = $this->parse_tags( $line );
+
+                $this->tree[$current_key]["text"] .= $tagged_line . "\n";
+
+            }
+
+        }
+    }
+
+    public function export_as_json(): string|null {
+
+        return json_encode( $this->tree, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE );
+
+    }
+
+
+}

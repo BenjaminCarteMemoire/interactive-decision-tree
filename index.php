@@ -1,0 +1,17 @@
+<?php
+
+include_once "vendor/autoload.php";
+
+$a = new \InteractiveDecisionTree\IDT( "data/tree.idt" );
+$a->parse();
+// var_dump( $a->tree );
+echo '<pre>';
+echo $a->export_as_json();
+echo '</pre>';
+?>
+
+<div id="idt_container"></div>
+<script id="json_tree">
+    const IDT_TREE = <?php echo $a->export_as_json(); ?>;
+</script>
+<script src="js/IDT.js"></script>

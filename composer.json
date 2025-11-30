@@ -1,0 +1,15 @@
+{
+    "name": "benjamincm/interactive-decision-tree",
+    "autoload": {
+        "psr-4": {
+            "InteractiveDecisionTree\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Benjamin",
+            "email": "benjamin@cartememoire.org"
+        }
+    ],
+    "require": {}
+}
