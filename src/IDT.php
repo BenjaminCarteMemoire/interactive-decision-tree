@@ -11,6 +11,7 @@ class IDT {
     public static function get_all_types() {
 
         $type_list = [
+            Types\Option::class,
             Types\Question::class,
             Types\Leaf::class,
             Types\Action::class,
@@ -179,6 +180,14 @@ class IDT {
             }
 
         }
+
+        Tables::apply( $this->tree, [
+            'color' => fn( string $color ) => Tables::color( $color ),
+            'border-color' => fn( string $color ) => Tables::color( $color ),
+            'hover-color' => fn( string $color ) => Tables::color( $color ),
+            'hover-border-color' => fn( string $color ) => Tables::color( $color ),
+        ] );
+
     }
 
     public function export_as_json(): string|null {

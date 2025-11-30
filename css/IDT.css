@@ -8,6 +8,59 @@ DEFAULT VARS
 
     --IDT-bold: 700;
     --IDT-color: #000;
+    --IDT-bgcolor: #fff;
+    --IDT-border-color: #fff;
+    --IDT-hover-bgcolor: #fff;
+    --IDT-hover-border-color: #fff;
+
+}
+
+/*
+-----
+IDT STRUCTURE
+-----
+*/
+
+.IDT_error {
+    border-radius: 5px;
+    display:block;
+    padding: 1%;
+    width: auto;
+    margin-left: 15%;
+    margin-right: 15%;
+}
+.IDT_error_fatal { background-color: #DE745F; }
+.IDT_error_warning { background-color: #D1DE5F; }
+
+/*
+-----
+IDT Q&A
+-----
+*/
+
+.IDT_answer {
+
+    display: block;
+    float: left;
+    padding: 5px 15px;
+    text-align: center;
+    margin: 5px 5px;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    background-color: var( --IDT-bgcolor );
+    border-color: var( --IDT-border-color );
+    border: 1px solid;
+    color: #FFF;
+    text-decoration: none;
+
+}
+
+.IDT_answer:hover {
+
+    cursor: pointer;
+    background-color: var( --IDT-hover-bgcolor );
+    border-color: var( --IDT-hover-border-color );
 }
 
 /*

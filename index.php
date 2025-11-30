@@ -6,7 +6,7 @@
 
 include_once "vendor/autoload.php";
 
-$a = new \InteractiveDecisionTree\IDT( "data/tree.idt" );
+$a = new \InteractiveDecisionTree\IDT( "data/ctgp.idt" );
 $a->parse();
 // var_dump( $a->tree );
 echo '<pre>';
