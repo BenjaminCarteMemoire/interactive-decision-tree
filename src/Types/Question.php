@@ -7,7 +7,8 @@ class Question extends Abstract_Type {
 
     public function __construct(){
         parent::__construct( 'question', [
-            'image_url' => ''
+            'image_url' => '',
+            'back_button' => IDT::$general_settings['back_button'],
         ] );
     }
 
@@ -22,9 +23,12 @@ class Question extends Abstract_Type {
 
             $current_key = $m[1];
             $current_type = $this->type_name;
+
+            $args = array_merge( $this->defaults, IDT::parse_args( $m[2] ) );
+            $args['back_button'] = IDT::boolean( $args[ 'back_button' ] );
             $tree_instance[ $current_key ] = [
                 'type' => $current_type,
-                'args' => array_merge( $this->defaults, IDT::parse_args( $m[2] ) ),
+                'args' => $args,
                 'text' => '',
                 'answers' => []
             ];

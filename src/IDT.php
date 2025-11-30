@@ -5,6 +5,10 @@ namespace InteractiveDecisionTree;
 class IDT {
 
     public static IDT_vars $vars;
+    public static array $general_settings = [
+        'back_button' => false
+    ];
+
     public string $filename;
     public private(set) array $tree = [];
 

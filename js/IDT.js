@@ -1,6 +1,6 @@
 document.addEventListener( 'DOMContentLoaded', function(){
 
-    let IDT_previous_section = "none";
+    let IDT_previous_section = []; // Stack...
     let IDT_section = "start";
     let IDT_div;
     let IDT_click_elements;
@@ -36,7 +36,6 @@ document.addEventListener( 'DOMContentLoaded', function(){
     }
 
     function IDT_goto( node_key ){
-        IDT_previous_section = IDT_section;
         IDT_section = node_key;
         IDT_render_node();
     }
@@ -84,10 +83,20 @@ document.addEventListener( 'DOMContentLoaded', function(){
             IDT_unbind_click_elements();
             let IDT_answer_id = this.getAttribute( 'data-answer-id' );
 
-            IDT_pre_section = IDT_NODE['answers'][ IDT_answer_id ]["to"];
+            if( IDT_answer_id == -1 ){
+
+                IDT_pre_section = IDT_previous_section.pop();
+
+            } else {
+
+                IDT_previous_section.push( IDT_section ); // Store in memory previous section.
+                IDT_pre_section = IDT_NODE['answers'][IDT_answer_id]["to"];
+
+            }
 
         }
 
+        console.log( IDT_previous_section );
         IDT_goto( IDT_pre_section );
 
     }
@@ -135,6 +144,17 @@ document.addEventListener( 'DOMContentLoaded', function(){
                         "data-answer-id="${IDT_answer_id++}">${IDT_ANSWER['args']['title']}</a>`;
 
                     });
+
+                    if( IDT_NODE['args']['back_button'] == true ){
+
+                        IDT_div.innerHTML += `<a class="idt_answer" style="
+                            --IDT-bgcolor:#555;
+                            --IDT-border-color:#444;
+                            --IDT-hover-bgcolor:#b3b3b3;
+                            --IDT-hover-border-color:#595959;
+                        "data-answer-id="-1">Go back</a>`;
+
+                    }
 
                 IDT_div.innerHTML += '</div>';
 

@@ -42,6 +42,12 @@ class Option extends Abstract_Type {
             return;
         }
 
+        // Back option, BackOption
+        if( $option == 'BackButton' || $option === 'BoutonRetour' ){
+            IDT::$general_settings['back_button'] = IDT::boolean( $value );
+            return;
+        }
+
 
     }
 
