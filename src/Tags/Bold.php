@@ -7,7 +7,7 @@ use InteractiveDecisionTree\IDT;
  * Make a text bold.
  *
  * Params :
- *    0 : Text.
+ *    0 : Text. Multi function allowed.
  * Args :
  *    weight : CSS bold weight (0-900), default: 700
  */
@@ -23,7 +23,7 @@ class Bold extends Abstract_Tag {
 
     protected function do_replace(
         array $mandatory_params,
-        array $args = []
+        array $args = [],
     ): string|null {
 
         // Mandatory params.
@@ -33,7 +33,7 @@ class Bold extends Abstract_Tag {
 
         $weight = intval( $args['weight'] ?? 700 );
 
-        return htmlspecialchars( sprintf( '<span class="IDT_tag_bold" style="--IDT-bold: %2$d;">%1$s</span>', $text, $weight ), ENT_QUOTES );
+        return sprintf( '<span class="IDT_tag_bold" style="--IDT-bold: %2$d;">%1$s</span>', $text, $weight );
 
     }
 

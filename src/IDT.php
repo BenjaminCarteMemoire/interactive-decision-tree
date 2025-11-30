@@ -4,16 +4,11 @@ namespace InteractiveDecisionTree;
 
 class IDT {
 
+    public static IDT_vars $vars;
     public string $filename;
     public private(set) array $tree = [];
 
-    public function __construct( string $filename )
-    {
-        $this->filename = $filename;
-        return $this;
-    }
-
-    public function get_all_types() {
+    public static function get_all_types() {
 
         $type_list = [
             Types\Question::class,
@@ -26,21 +21,15 @@ class IDT {
 
     }
 
-    public function get_all_tags() {
+    public static function get_all_tags() {
 
         $tags_list = [
             Tags\Image::class,
             Tags\Bold::class,
+            Tags\Italic::class,
         ];
 
         return $tags_list;
-
-    }
-
-    public function read_file(): array {
-
-        $content = file($this->filename, FILE_IGNORE_NEW_LINES);
-        return $content;
 
     }
 
@@ -55,23 +44,62 @@ class IDT {
 
     }
 
-    public function parse_tags( string $line ){
+    public static function parse_tags_composite( string $line ){
+
+        $blocks = explode( '+', $line );
+        $stack = [];
+        $i = 0;
+
+        foreach ($blocks as $block) {
+
+            $i++;
+            $block = trim($block);
+
+            $block = preg_replace_callback('/%[A-Za-z0-9_]+/', function($m) {
+                $key = $m[0];
+                return static::$vars->get( $key );
+            }, $block);
+
+            $tagged_line = self::parse_tags( $block );
+
+            /*
+            if( strpos( $block, '°1' ) !== false ){
+                $prev = array_pop( $stack ) ?? '';
+                $tagged_line = str_replace( '°1', $prev, $tagged_line );
+            }
+            */
+
+            // $stack[] = $tagged_line;
+            if( count( $blocks ) > $i ) {
+                static::$vars->set_internal($tagged_line);
+            }
+
+        }
+
+        return $tagged_line;
+
+    }
+
+    public static function parse_tags( string $line ){
+
+        if( $line == '' ) return '';
 
         return preg_replace_callback( '/\{(.*?)\}/', function($m) {
 
             $inside = trim( $m[1] );
 
             if( !preg_match('/^([A-Za-z0-9_]+)\s*,\s*(.*)$/', $inside, $m2) )
-                return ""; // Error, no key.
+                return ""; // Error, no key.w
 
             $tag_name = $m2[1];
             $global_args = trim( $m2[2] );
 
-            preg_match_all('/"([^"]+)"/', $global_args, $m3);
-            $mandatory_params = $m3[1];
+            preg_match('/^"([\s\S]*)"$/', $global_args, $m3);
+            $mandatory_params = [ $m3[1] ];
+
             $args = self::parse_args( $global_args );
 
-            foreach( $this->get_all_tags() as $tag_class ) {
+            foreach( self::get_all_tags() as $tag_class ) {
                 $tag_instance = new $tag_class();
                 $pre_response = $tag_instance->replace( $tag_name, $mandatory_params, $args );
                 if( !is_null( $pre_response ) )
@@ -81,6 +109,29 @@ class IDT {
             return "";
 
         }, $line );
+    }
+
+    public static function boolean( string|bool $bool ): bool {
+
+        if( is_bool( $bool ) )
+            return $bool;
+
+        $true = [ 'yes', 'oui', 'Y', 'O', ' y ', ' o ', ' Y ', ' O ', ' Y', ' y', ' O', ' o', 'Y ', 'y ', 'O ', 'o ' ]; // Just for tests...
+        return in_array( $bool, $true );
+    }
+
+    public function __construct( string $filename )
+    {
+        $this->filename = $filename;
+        static::$vars = new IDT_vars();
+        return $this;
+    }
+
+    public function read_file(): array {
+
+        $content = file($this->filename, FILE_IGNORE_NEW_LINES);
+        return $content;
+
     }
 
     public function parse(){
@@ -98,7 +149,7 @@ class IDT {
             if( $line === '' || $line[0] === '#' )
                 continue;
 
-            foreach( $this->get_all_types() as $type_class ){
+            foreach( self::get_all_types() as $type_class ){
 
                 $type_instance = new $type_class();
                 if( $type_instance->find_pattern( $this->tree, $line, $type, $current_key ) ){ // If type is the right one. Stop the loop and go to the next line.
@@ -122,8 +173,7 @@ class IDT {
 
             if( $current_key !== null ) { // If it's no type and in a block, it's a text element.
 
-                $tagged_line = $this->parse_tags( $line );
-
+                $tagged_line = self::parse_tags_composite( $line );
                 $this->tree[$current_key]["text"] .= $tagged_line . "\n";
 
             }
@@ -133,7 +183,7 @@ class IDT {
 
     public function export_as_json(): string|null {
 
-        return json_encode( $this->tree, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE );
+        return json_encode( $this->tree, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR );
 
     }
 

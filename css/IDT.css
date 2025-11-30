@@ -16,6 +16,9 @@ IDT TAGS
 -----
 */
 
+.IDT_image {}
+.IDT_image_center { display: block; margin: 0 auto; }
+
 .IDT_tag_bold { font-weight: var( --IDT-bold ); }
 .IDT_tag_italic { font-style: italic; }
 .IDT_tag_underline { text-decoration: underline; }
