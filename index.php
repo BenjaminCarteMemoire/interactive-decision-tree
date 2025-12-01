@@ -1,6 +1,7 @@
 <head>
     <title>Test IDT</title>
     <link rel="stylesheet" href="css/IDT.css" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
 </head>
 <?php
 

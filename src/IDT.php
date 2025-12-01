@@ -6,7 +6,8 @@ class IDT {
 
     public static IDT_vars $vars;
     public static array $general_settings = [
-        'back_button' => false
+        'back_button' => false,
+        'visual_tree' => false,
     ];
 
     public string $filename;
@@ -141,6 +142,8 @@ class IDT {
 
     public function parse(){
 
+        $this->tree['_internal'] = null;
+
         $content = $this->read_file();
         $current_key = null;
         $type = null;
@@ -191,6 +194,9 @@ class IDT {
             'hover-color' => fn( string $color ) => Tables::color( $color ),
             'hover-border-color' => fn( string $color ) => Tables::color( $color ),
         ] );
+
+        $this->tree['_internal']['start'] = 'start';
+        $this->tree['_internal']['visual_tree'] = static::$general_settings['visual_tree'];
 
     }
 

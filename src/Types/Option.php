@@ -48,6 +48,12 @@ class Option extends Abstract_Type {
             return;
         }
 
+        // Visual tree VisualTree
+        if( $option == 'VisualTree' || $option == 'ArbreVisuel' ){
+            IDT::$general_settings['visual_tree'] = IDT::boolean( $value );
+            return;
+        }
+
 
     }
 
