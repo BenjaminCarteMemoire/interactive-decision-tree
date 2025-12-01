@@ -3,7 +3,7 @@ export default {
         outDir: '../../public',
         emptyOutDir: true,
         rollupOptions: {
-            input: 'src/main.js'
+            input: 'src/main.ts'
         }
     }
 }
