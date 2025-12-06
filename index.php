@@ -18,4 +18,4 @@ echo '</pre>';
 <script id="json_tree">
     const IDT_TREE = <?php echo $a->export_as_json(); ?>;
 </script>
-<script src="public/assets/main-DlKvcrLO.js"></script>
+<script src="public/assets/main-CInovI1D.js"></script>

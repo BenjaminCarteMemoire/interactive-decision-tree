@@ -2,6 +2,7 @@
 
 namespace InteractiveDecisionTree\Types;
 use InteractiveDecisionTree\IDT;
+use InteractiveDecisionTree\Tables;
 
 class Option extends Abstract_Type {
 
@@ -51,6 +52,12 @@ class Option extends Abstract_Type {
         // Visual tree VisualTree
         if( $option == 'VisualTree' || $option == 'ArbreVisuel' ){
             IDT::$general_settings['visual_tree'] = IDT::boolean( $value );
+            return;
+        }
+
+        // Locale option, Locale
+        if( $option == 'Locale' || $option == 'Langue' || $option == 'Region' ){
+            IDT::$general_settings['locale'] = Tables::locale( $value );
             return;
         }
 

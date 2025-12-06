@@ -8,6 +8,7 @@ class IDT {
     public static array $general_settings = [
         'back_button' => false,
         'visual_tree' => false,
+        'locale' => 'en_US',
     ];
 
     public string $filename;
@@ -188,6 +189,7 @@ class IDT {
 
         }
 
+        // Setup recursive tree search binding.
         Tables::apply( $this->tree, [
             'color' => fn( string $color ) => Tables::color( $color ),
             'border-color' => fn( string $color ) => Tables::color( $color ),
@@ -195,8 +197,10 @@ class IDT {
             'hover-border-color' => fn( string $color ) => Tables::color( $color ),
         ] );
 
+        // Setup _internal settings.
         $this->tree['_internal']['start'] = 'start';
         $this->tree['_internal']['visual_tree'] = static::$general_settings['visual_tree'];
+        $this->tree['_internal']['locale'] = static::$general_settings['locale'];
 
     }
 

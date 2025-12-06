@@ -90,6 +90,60 @@ export class Render{
 
     }
 
+    add_modal(
+        modal_id: string,
+        modal_title: string,
+        html_element: HTMLElement
+    ){
+
+        if( typeof this.DIVS![ 'idt_modal_' + modal_id ] !== 'undefined' )
+            return; // Already exists.
+
+        // Parent DIV
+        const main_div: HTMLElement = document.createElement( "div" );
+        main_div.classList.add( 'IDT_modal' );
+        main_div.id = 'idt_modal_' + modal_id;
+
+        // Content DIV
+        const content_div: HTMLElement = document.createElement( "div" );
+        content_div.classList.add( 'IDT_modal_content' );
+        main_div.appendChild( content_div );
+
+        // Header DIV
+        const header_div: HTMLElement = document.createElement( "div" );
+        header_div.classList.add( 'IDT_modal_header' );
+        content_div.appendChild( header_div );
+
+        // Close SPAN
+        const close_span: HTMLElement = document.createElement( "span" );
+        close_span.classList.add( 'IDT_modal_close' );
+        close_span.id = 'idt_modal_' + modal_id + '_close';
+        close_span.innerHTML = '×';
+        header_div.appendChild( close_span );
+
+        // Close SPAN event.
+        close_span.addEventListener( "click", function(){
+           main_div.style.display = "none";
+        });
+
+        // Header Title
+        const header_title: HTMLElement = document.createElement( "h2" );
+        header_title.innerHTML = modal_title;
+        header_div.appendChild( header_title );
+
+        // Body DIV
+        const body_div: HTMLElement = document.createElement( "div" );
+        body_div.classList.add( 'IDT_modal_body' );
+        body_div.id = 'idt_modal_' + modal_id + '_body';
+        body_div.appendChild( html_element );
+        content_div.appendChild( body_div );
+
+        this.DIVS!['idt_modal_' + modal_id] = main_div;
+        this.GLOBAL_DIV?.appendChild( main_div );
+        return;
+
+    }
+
     render(){
 
         this.current_node = IDT_TREE[ IDT_Route.current_section() ];

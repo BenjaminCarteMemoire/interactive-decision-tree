@@ -24,6 +24,14 @@ class Tables {
             'hover-green' => '#2ad585',
             'hover-border-green' => '#1fe086',
 
+            // Blue.
+            'blue' => '#4260f5',
+            'border-blue' => '#6e85f7',
+            'hover-blue' => '#6e85f7',
+            'hover-border-blue' => '#3d5cf5',
+
+
+
         ];
 
         return $color_table[$color] ?? $color;
@@ -33,6 +41,32 @@ class Tables {
     public static function color_preset( string $preset ): array{
 
         return [ $preset, 'border-' . $preset, 'hover-' . $preset, 'hover-border-' . $preset ];
+
+    }
+
+    public static function locale( string $locale ): string {
+
+        $locale_table = [
+
+            // English
+            'en_US' => 'en_US',
+            'en' => 'en_US',
+            'us' => 'en_US',
+            'english' => 'en_US',
+            'English' => 'en_US',
+
+            // French
+            'fr_FR' => 'fr_FR',
+            'fr' => 'fr_FR',
+            'FR' => 'fr_FR',
+            'france' => 'fr_FR',
+            'francais' => 'fr_FR',
+            'France' => 'fr_FR',
+            'Francais' => 'fr_FR',
+
+        ];
+
+        return $locale_table[ $locale ] ?? 'en_US';
 
     }
 
